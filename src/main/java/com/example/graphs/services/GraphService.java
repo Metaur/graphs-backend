@@ -4,6 +4,10 @@ import com.example.graphs.exceptions.VertexNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import static java.util.function.Predicate.not;
 
 @Service
 public class GraphService {
@@ -47,20 +51,11 @@ public class GraphService {
         var a = adjacencyList.getOrDefault(v1, Collections.emptySet());
         var queue = new LinkedList<>(a);
 
-        while(!queue.isEmpty()) {
-            var next = queue.poll();
-
-            if (visited.contains(next)) {
-                continue;
-            }
-            visited.add(next);
-
-            if (next.equals(v2)) {
-                return true;
-            }
-            queue.addAll(adjacencyList.getOrDefault(next, Collections.emptySet()));
-        }
-
-        return false;
+        return Stream.generate(queue::poll)
+                .takeWhile(Objects::nonNull)
+                .filter(not(visited::contains))
+                .peek(visited::add)
+                .peek(next -> queue.addAll(adjacencyList.getOrDefault(next, Collections.emptySet())))
+                .anyMatch(v2::equals);
     }
 }
