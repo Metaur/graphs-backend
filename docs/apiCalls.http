@@ -1,0 +1,26 @@
+POST http://localhost:8080/api/v1/graph
+Content-Type: application/json
+
+{
+  "from": "a",
+  "to": "b",
+  "bidirectional": true
+}
+
+###
+GET http://localhost:8080/api/v1/graph
+Accept: application/json
+
+###
+
+GET http://localhost:8080/api/v1/graph/connected?v1=a&v2=b
+Accept: application/json
+
+###
+
+DELETE http://localhost:8080/api/v1/graph/edges?v1=a&v2=b
+Accept: application/json
+
+###
+
+
